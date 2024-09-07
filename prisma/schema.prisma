@@ -53,6 +53,7 @@ model Content {
   comments         Comment[]
   commentsCount    Int             @default(0)
   bookmark         Bookmark[]
+  timestamps       Timestamp[]
 }
 
 model CourseContent {
@@ -148,6 +149,7 @@ model User {
   disableDrm     Boolean         @default(false)
   bunnyProxyEnabled Boolean      @default(false)
   bookmarks      Bookmark[]
+  timestamps     Timestamp[]
   password       String?
   appxUserId     String?
   appxUsername   String?
@@ -213,6 +215,15 @@ model Bookmark {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   content   Content  @relation(fields: [contentId], references: [id])
   createdAt DateTime @default(now())
+}
+model Timestamp {
+  id         Int      @id @default(autoincrement())
+  contentId  Int
+  userId     String
+  content    Content  @relation(fields: [contentId], references: [id])
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  label      String
+  time       Int
 }
 
 model Comment {

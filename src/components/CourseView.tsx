@@ -65,6 +65,7 @@ export const CourseView = ({
             markAsCompleted:
               courseContent?.value?.videoProgress?.markAsCompleted || false,
             bookmark: courseContent?.value.bookmark ?? null,
+            timestamps: courseContent?.value.timestamps ?? null,
           }}
         />
       ) : null}

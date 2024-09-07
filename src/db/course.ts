@@ -2,7 +2,7 @@ import db from '@/db';
 import { cache } from '@/db/Cache';
 import { authOptions } from '@/lib/auth';
 import { getServerSession } from 'next-auth';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Timestamp } from '@prisma/client';
 import { getBookmarkData } from './bookmark';
 
 export interface Content {
@@ -250,6 +250,13 @@ export function getVideoProgressForUser(
   });
 }
 
+export function getVideoTimestamps(userId: String, contentId: number) {
+  return db.timestamp.findMany({
+    //@ts-ignore
+    where: { contentId, userId },
+  });
+}
+
 interface VideoProgress {
   duration: number | null;
   markAsCompleted?: boolean;
@@ -259,12 +266,14 @@ interface VideoProgress {
 export type ChildCourseContent = {
   videoProgress: VideoProgress | null;
   bookmark?: Bookmark;
+  timestamps?: Timestamp | null;
 } & ContentWithMetadata;
 
 export type FullCourseContent = {
   children?: ChildCourseContent[];
   videoProgress: VideoProgress | null;
   bookmark?: Bookmark;
+  timestamps?: Timestamp;
 } & ContentWithMetadata;
 
 //TODO: add a cache here
@@ -286,6 +295,8 @@ export const getFullCourseContent = async (
   const courseContent = await getRootCourseContent(courseId);
   const videoProgress = await getVideoProgressForUser(session?.user?.id);
   const bookmarkData = await getBookmarkData();
+  //todo
+  /* const timestampData = await ge */
   const contentMap = new Map<string, FullCourseContent>(
     contents.map((content: any) => [
       content.id,

@@ -2,7 +2,7 @@ import db from '@/db';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { ContentRendererClient } from './ContentRendererClient';
-import { Bookmark } from '@prisma/client';
+import { Bookmark, Timestamp } from '@prisma/client';
 
 function bunnyUrl(url?: string) {
   if (!url) return '';
@@ -141,6 +141,7 @@ export const ContentRenderer = async ({
     slides?: string;
     markAsCompleted: boolean;
     bookmark: Bookmark | null;
+    timestamps: Timestamp | null;
   };
 }) => {
   const metadata = await getMetadata(content.id);

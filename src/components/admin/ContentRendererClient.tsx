@@ -23,11 +23,13 @@ export const ContentRendererClient = ({
     thumbnail: string;
     description: string;
     markAsCompleted: boolean;
+    timestamps: any;
   };
 }) => {
   const [showChapters, setShowChapters] = useState(
     metadata?.segments?.length > 0,
   );
+  const [showTimestamps, setShowTimestamps] = useState(false);
   const searchParams = useSearchParams();
 
   const router = useRouter();
@@ -67,6 +69,9 @@ export const ContentRendererClient = ({
 
   const toggleShowChapters = () => {
     setShowChapters((prev) => !prev);
+  };
+  const toggleShowTimestamps = () => {
+    setShowTimestamps((prev) => !prev);
   };
 
   return (
@@ -121,19 +126,33 @@ export const ContentRendererClient = ({
                       Lecture Slides
                     </button>
                   </a>
+                  <button className="mb-2 me-2 flex items-center gap-2 rounded-lg bg-blue-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-blue-800 dark:bg-blue-600 dark:hover:bg-blue-700">
+                    Add TimeStamp
+                  </button>
                 </div>
               ) : null}
-              {!showChapters && metadata.segments?.length > 0 && (
+              <div>
                 <button
                   className="my-4 rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700"
                   onClick={() => {
                     scrollTo({ top: 0, behavior: 'smooth' });
-                    toggleShowChapters();
+                    toggleShowTimestamps();
                   }}
                 >
-                  View All Chapters
+                  My TimeStamps
                 </button>
-              )}
+                {!showChapters && metadata.segments?.length > 0 && (
+                  <button
+                    className="my-4 ml-4 rounded bg-blue-500 p-2 font-bold text-white hover:bg-blue-700"
+                    onClick={() => {
+                      scrollTo({ top: 0, behavior: 'smooth' });
+                      toggleShowChapters();
+                    }}
+                  >
+                    View All Chapters
+                  </button>
+                )}
+              </div>
             </div>
           </div>
           {nextContent ? (
@@ -159,6 +178,12 @@ export const ContentRendererClient = ({
           <VideoContentChapters
             segments={metadata?.segments}
             onCancel={toggleShowChapters}
+          />
+        )}
+        {showTimestamps && (
+          <VideoContentChapters
+            segments={content?.timestamps}
+            onCancel={toggleShowTimestamps}
           />
         )}
       </div>
